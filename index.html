@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#eaffb0">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="From 380 to 450 Actuators per Shift: Our Capacity Study | Sandesh Subedi">
+  <meta property="og:description" content="How we evaluated increasing actuator production from 380 to 450 units per shift by investigating assembly flow, testing constraints, staffing, and quality evidence.">
+  <meta name="description" content="An industrial engineering case study by Sandesh Subedi: how we evaluated raising actuator assembly output from 380 to 450 accepted units per shift and what the evidence showed.">
+  <title>From 380 to 450 Actuators per Shift: Our Capacity Study | Sandesh Subedi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Mulish:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--lime:#eaffb0;--ink:#171915;--grey:#666c62;--muted:#848a80;--white:#fff;--paper:#fbfcf8;--line:#dfe5d6;--soft:#f3f6ec;--shadow:0 18px 64px rgba(20,28,13,.09);--font-display:'Montserrat',Arial,sans-serif;--font-label:'Montserrat',Arial,sans-serif;--font-body:'Mulish',Arial,sans-serif;--page:1280px}
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:88px}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.58;-webkit-font-smoothing:antialiased}
+    ::selection{background:#ccec8b;color:var(--ink)}
+    a{color:inherit;text-decoration:none}
+    button,input{font:inherit}
+    button{cursor:pointer}
+    button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #596a39;outline-offset:5px}
+    img,svg{max-width:100%}
+    .container{width:min(var(--page),calc(100% - 104px));margin:0 auto}
+    .skip-link{position:fixed;z-index:300;top:-80px;left:16px;padding:12px 18px;background:var(--ink);color:white;border-radius:8px}.skip-link:focus{top:12px}
+    .eyebrow,.micro,.pill,.nav,.btn,.step-no,.section-number,.meter-legend,.skill-pill,.step-heading,.tag,.phase-no,.stage-label,.tab,.kicker{font-family:var(--font-label)}
+    .eyebrow{display:flex;gap:10px;align-items:center;font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+    .eyebrow .dot{height:7px;width:7px;background:currentColor;border-radius:50%}
+    .topbar{height:80px;position:sticky;top:0;z-index:100;background:rgba(251,252,248,.93);backdrop-filter:blur(20px);border-bottom:1px solid rgba(23,25,21,.11)}
+    .topbar-inner{width:min(1440px,calc(100% - 104px));height:100%;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:36px}
+    .brand{display:inline-flex;align-items:center;gap:12px;font-family:var(--font-label);font-size:12px;letter-spacing:-.025em;font-weight:800;white-space:nowrap}
+    .brand-mark{height:36px;width:36px;display:grid;place-items:center;border:1.5px solid var(--ink);border-radius:50%;font-size:15px;font-weight:700;letter-spacing:-.07em;padding-right:2px}
+    .nav{display:flex;gap:29px;align-items:center;font-size:10.5px;letter-spacing:.02em;font-weight:700}
+    .nav a:not(.nav-cta){color:#62685c;transition:color .2s}.nav a:not(.nav-cta):hover,.nav a[aria-current="true"]{color:var(--ink)}
+    .nav-cta{padding:12px 19px;border:1px solid var(--ink);border-radius:40px;display:flex;gap:12px;align-items:center;transition:background .25s,color .25s}.nav-cta:hover{background:var(--ink);color:var(--white)}
+    .nav-toggle{display:none;border:0;background:none;padding:7px}
+    .nav-toggle span{display:block;width:23px;height:2px;background:var(--ink);margin:5px 0}
+    .hero{background:var(--lime);position:relative;overflow:hidden;border-bottom:1px solid var(--ink)}
+    .hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(to right,rgba(20,23,18,.038) 1px,transparent 1px),linear-gradient(to bottom,rgba(20,23,18,.038) 1px,transparent 1px);background-size:88px 88px;mask-image:linear-gradient(to right,transparent 24%,black 95%);pointer-events:none}
+    .hero-inner{min-height:calc(100svh - 80px);padding:104px 0 44px;display:grid;grid-template-columns:1.32fr .68fr;grid-template-rows:1fr auto;gap:60px 66px;position:relative}
+    .hero-copy{max-width:760px;align-self:center}
+    .hero .eyebrow{margin-bottom:30px}
+    .hero h1{font-family:var(--font-display);font-size:clamp(72px,8.1vw,133px);line-height:.895;letter-spacing:-.055em;font-weight:400;margin:0 0 32px}
+    .hero h1 em{font-weight:400;font-style:italic}
+    .hero .lead{font-size:clamp(16px,1.48vw,19px);line-height:1.55;max-width:555px;margin:0 0 22px;font-weight:650;letter-spacing:-.012em}
+    .hero .sublead{font-size:14px;max-width:570px;line-height:1.75;margin:0;color:#42493a}
+    .actions{margin-top:32px;display:flex;align-items:center;flex-wrap:wrap;gap:11px}
+    .btn{display:inline-flex;gap:26px;align-items:center;justify-content:center;min-height:48px;border-radius:40px;padding:12px 20px;font-size:11px;font-weight:750;letter-spacing:.025em;border:1px solid var(--ink);transition:transform .2s,background .2s,color .2s}
+    .btn:hover{transform:translateY(-2px)}.btn.dark{background:var(--ink);color:white}.btn.dark:hover{background:#3a3f31}.btn.light:hover{background:rgba(255,255,255,.5)}
+    .btn .arrow{font-size:19px;line-height:1;font-family:var(--font-body)}
+    .hero-graphic{align-self:center;position:relative;margin-top:18px;min-width:0}
+    .hero-card{border:1.5px solid rgba(23,25,21,.9);background:rgba(255,255,255,.55);padding:28px 26px 24px;border-radius:13px;box-shadow:14px 14px 0 rgba(23,25,21,.065);transform:rotate(1.5deg);transition:transform .5s}
+    .hero-card:hover{transform:rotate(0deg) translateY(-3px)}
+    .card-top{display:flex;justify-content:space-between;gap:20px;border-bottom:1px solid rgba(23,25,21,.24);padding-bottom:18px;margin-bottom:21px}.kicker{font-size:9px;letter-spacing:.14em;font-weight:800;text-transform:uppercase}.card-id{font-size:11px;color:var(--grey);font-family:var(--font-label)}
+    .target-line{display:flex;align-items:baseline;justify-content:space-between;margin-top:15px;font-size:13px;font-weight:800}
+    .target-line strong{font-family:var(--font-display);font-size:43px;font-weight:400;line-height:1}
+    .target-line small{display:block;color:var(--grey);font-size:10px;font-weight:700;letter-spacing:.03em;font-family:var(--font-label)}
+    .bar-track{height:18px;background:rgba(23,25,21,.1);position:relative;margin:10px 0 28px;border:1px solid rgba(23,25,21,.13)}
+    .bar-track::after{content:"";position:absolute;right:0;top:-5px;bottom:-5px;border-right:1px dashed var(--ink)}
+    .bar-fill{height:100%;background:var(--ink);width:0;transition:width 1.15s cubic-bezier(.2,.8,.2,1)}.hero.in-view .bar-fill{width:84.444%}
+    .bar-gap{position:absolute;inset:0 0 0 84.444%;display:flex;align-items:center;justify-content:center;font:800 8px var(--font-label)}
+    .hero-card-note{padding-top:14px;border-top:1px solid rgba(23,25,21,.2);display:flex;gap:8px;font-size:11px;color:#505648;line-height:1.55}
+    .hero-card-note svg{width:14px;flex:0 0 14px;margin-top:1px}
+    .rot-label{position:absolute;right:-14px;top:-37px;transform:rotate(11deg);border:1px solid var(--ink);border-radius:50%;width:97px;height:97px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--lime);font:800 9px/1.45 var(--font-label);letter-spacing:.08em;text-align:center}
+    .rot-label span{font-size:27px;line-height:1.2;font-family:var(--font-display);font-weight:400;letter-spacing:0}
+    .hero-bottom{grid-column:1/-1;display:flex;align-items:end;justify-content:space-between;gap:24px;padding-top:26px;border-top:1px solid rgba(23,25,21,.28)}
+    .hero-bottom .note{font-size:11px;line-height:1.7;max-width:570px;color:#4c5145}.hero-bottom .note strong{color:var(--ink)}
+    .hero-bottom .scroll{display:flex;align-items:center;gap:18px;font:700 10px var(--font-label);letter-spacing:.13em;text-transform:uppercase;white-space:nowrap}.scroll-icon{width:27px;height:41px;border:1px solid var(--ink);border-radius:30px;position:relative}.scroll-icon::after{content:"";position:absolute;width:3px;height:8px;border-radius:2px;background:var(--ink);left:11px;top:10px;animation:scrollPulse 2.4s infinite}
+    @keyframes scrollPulse{0%{transform:translateY(0);opacity:1}70%{transform:translateY(12px);opacity:.2}100%{transform:translateY(0);opacity:1}}
+    .section{padding:115px 0}.section.alt{background:white}.section.lime{background:var(--lime)}
+    .section-head{display:grid;grid-template-columns:170px minmax(0,1fr);gap:45px;margin-bottom:60px}
+    .section-number{display:flex;align-items:baseline;gap:9px;font-size:11px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;padding-top:14px}.section-number span{color:#979e8f}
+    h2{font:400 clamp(47px,5.3vw,76px)/.99 var(--font-display);letter-spacing:-.035em;margin:0;max-width:820px}
+    h2 em{font-weight:400}
+    .section-deck{color:#596051;font-size:15px;line-height:1.75;max-width:650px;margin:25px 0 0}
+    .full-rule{height:1px;background:var(--line)}
+    .stats-strip{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line);border-top:1px solid var(--line);margin:0 0 120px}
+    .stats-strip article{padding:36px 28px 37px;border-right:1px solid var(--line)}.stats-strip article:first-child{padding-left:0}.stats-strip article:last-child{border-right:0}
+    .big-number{font:400 clamp(45px,5vw,67px)/1 var(--font-display);letter-spacing:-.055em}.big-number sup{font:700 13px var(--font-label);vertical-align:top;letter-spacing:0;margin-left:6px}
+    .metric-caption{font:750 10px/1.7 var(--font-label);text-transform:uppercase;letter-spacing:.09em;margin-top:15px;max-width:195px}.metric-small{font-size:11px;color:var(--grey);margin-top:6px;max-width:200px}
+    .overview-grid{display:grid;grid-template-columns:1fr 1fr;gap:11%}
+    .overview-left{max-width:570px}.pull-quote{font:400 clamp(32px,3.5vw,52px)/1.11 var(--font-display);letter-spacing:-.023em;margin:26px 0}.pull-quote em{font-style:italic}.overview-right{padding-top:10px}
+    .quick-label{font:800 10px var(--font-label);letter-spacing:.14em;text-transform:uppercase;color:var(--grey);margin-bottom:12px}
+    .facts{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}.facts li{display:grid;grid-template-columns:34% 1fr;gap:15px;border-bottom:1px solid var(--line);padding:16px 0;font-size:13px}.facts strong{font-weight:800}.facts span{color:var(--grey)}
+    .micro-note{border-left:2px solid var(--ink);padding-left:18px;margin-top:25px;font-size:12px;color:var(--grey);line-height:1.7}
+    .section-intro{font-size:17px;line-height:1.7;color:#596052;max-width:700px}
+    .flow-panel{background:var(--soft);border:1px solid var(--line);border-radius:13px;padding:30px;position:relative}
+    .flow-meta{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:25px}.flow-meta .micro{font-size:10px;text-transform:uppercase;letter-spacing:.13em;font-weight:800}.flow-meta .click-hint{font-size:11px;color:var(--grey)}
+    .flow-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px;position:relative}
+    .flow-step{min-height:152px;padding:18px 10px 16px;text-align:left;background:rgba(255,255,255,.64);border:1px solid #d2d9ca;border-radius:7px;position:relative;transition:transform .2s,background .2s,box-shadow .2s}
+    .flow-step:hover{transform:translateY(-3px)}.flow-step[aria-pressed="true"]{background:var(--lime);border:1.5px solid var(--ink);box-shadow:0 7px 0 rgba(23,25,21,.09)}
+    .flow-step .s-index{font:700 10px var(--font-label);color:var(--grey);display:block}.flow-step .s-icon{height:37px;margin:17px 0 15px;display:flex;align-items:center}.flow-step .s-icon svg{width:36px;height:36px;stroke:var(--ink);fill:none;stroke-width:1.4}.flow-step .s-title{display:block;font:800 10px/1.45 var(--font-label);max-width:120px}.flow-step .s-triangle{position:absolute;right:-12px;top:50%;z-index:2;font-size:15px;transform:translateY(-50%);color:var(--grey)}.flow-step:last-child .s-triangle{display:none}
+    .flow-detail{border-top:1px solid #cad2c0;margin-top:28px;padding-top:23px;display:grid;grid-template-columns:1fr 2fr;gap:35px;min-height:125px}
+    .flow-detail h3{font:400 34px/1.1 var(--font-display);margin:3px 0}.flow-detail p{font-size:14px;color:#535b4d;margin:0;max-width:680px}.flow-detail .tag{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;display:inline-block;margin-bottom:9px}
+    .insight-row{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:27px}.insight-card{border:1px solid var(--line);padding:29px 30px;background:white;border-radius:8px}.insight-card .micro{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.insight-card h3{font:400 35px/1.03 var(--font-display);letter-spacing:-.02em;margin:16px 0}.insight-card p{font-size:13px;color:var(--grey);line-height:1.7;margin:0}
+    .accent-card{background:var(--lime);border-color:#cbd8ae}
+    .integrity-layout{display:grid;grid-template-columns:1.05fr .95fr;gap:8%;align-items:center}
+    .int-callout{font:400 clamp(40px,4.2vw,61px)/1.05 var(--font-display);max-width:550px;margin:24px 0 22px}.int-callout em{font-style:italic}
+    .int-copy{font-size:14px;line-height:1.8;color:#596052;max-width:500px}
+    .integrity-metrics{margin-top:29px;display:flex;align-items:baseline;gap:13px;flex-wrap:wrap}.integrity-metrics .num{font:400 56px/1 var(--font-display)}.integrity-metrics .small{max-width:190px;font:700 10px/1.6 var(--font-label);text-transform:uppercase;letter-spacing:.09em}
+    .data-card{border-radius:11px;padding:33px;background:white;border:1px solid var(--line);box-shadow:var(--shadow)}
+    .data-card-top{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:24px}.data-card-top span{font:800 10px var(--font-label);letter-spacing:.13em;text-transform:uppercase}.data-card-top small{color:var(--grey);font:600 10px var(--font-label)}
+    .stacked{display:flex;overflow:hidden;height:28px;background:var(--soft);border-radius:4px;margin:19px 0 30px;gap:2px}.seg1{background:var(--ink);width:89.18%}.seg2{background:#858d78;width:7.12%}.seg3{background:#d1d7c6;width:3.7%}
+    .legend-row{display:grid;grid-template-columns:15px 1fr auto;gap:12px;align-items:start;margin-bottom:20px}.legend-swatch{width:13px;height:13px;border-radius:2px;margin-top:3px}.legend-row strong{display:block;font:800 13px var(--font-label)}.legend-row small{display:block;font-size:11px;color:var(--grey);margin-top:3px}.legend-row .legend-n{font:400 27px/1 var(--font-display)}
+    .data-clarity{display:flex;gap:13px;margin-top:11px;background:var(--soft);border-radius:5px;padding:16px;font-size:12px;line-height:1.6}.data-clarity svg{width:20px;flex:0 0 20px}
+    .calculation{background:var(--lime);border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+    .calc-grid{display:grid;grid-template-columns:.75fr 1.25fr;gap:9%}
+    .calc-left .section-number{margin-bottom:45px}.calc-left h2{font-size:clamp(48px,5vw,72px)}
+    .calc-left p{font-size:14px;line-height:1.75;max-width:340px;margin-top:25px}
+    .eq-card{background:var(--white);border:1.5px solid var(--ink);border-radius:12px;box-shadow:13px 13px 0 rgba(23,25,21,.08);padding:35px}
+    .eq-top{display:flex;justify-content:space-between;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding-bottom:17px;margin-bottom:23px}
+    .eq-top strong{font:800 10px var(--font-label);text-transform:uppercase;letter-spacing:.12em}.eq-top span{font-size:11px;color:var(--grey)}
+    .seg-toggle{display:inline-flex;background:var(--soft);padding:4px;border-radius:30px;gap:4px;margin-bottom:24px}.seg-toggle button{border:0;background:transparent;padding:9px 13px;border-radius:40px;font:700 10px var(--font-label);color:#596052;transition:background .2s}.seg-toggle button[aria-pressed="true"]{background:var(--ink);color:white}
+    .equation{font:400 clamp(29px,3.5vw,52px)/1.2 var(--font-display);letter-spacing:-.02em;margin-bottom:10px;white-space:normal}.equation .times{font-size:.78em;vertical-align:middle}.equation strong{font-weight:400}
+    .eq-sub{font-size:12px;color:var(--grey);line-height:1.7;min-height:55px;margin:8px 0 23px}
+    .capacity-graphic{padding:14px 0 9px}.capacity-top{display:flex;justify-content:space-between;margin-bottom:12px;gap:10px;font:800 10px var(--font-label);letter-spacing:.04em}
+    .capacity-track{position:relative;width:100%;height:35px;background:#edf0e8;border:1px solid #dce3d4;overflow:visible}
+    .capacity-fill{height:100%;width:0;background:var(--ink);transition:width .75s cubic-bezier(.2,.8,.2,1)}
+    .capacity-limit{position:absolute;height:53px;top:-9px;left:85%;border-left:2px dashed #717a66;z-index:5}.capacity-limit::after{content:'510 MIN';position:absolute;top:-27px;left:-23px;font:800 9px var(--font-label);white-space:nowrap}
+    .eq-foot{margin-top:25px;padding:16px 17px;background:#f5f8ef;border-radius:6px;color:#5c6558;font-size:11px;line-height:1.7}.eq-foot strong{color:var(--ink)}
+    .decisions-rail{display:grid;grid-template-columns:.8fr 1.2fr;gap:8%;align-items:start}.decision-side h2{max-width:410px}.decision-side p{max-width:350px;margin-top:24px;font-size:14px;color:var(--grey);line-height:1.8}
+    .decision-workspace{border-top:1px solid var(--ink)}.decision-tablist{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--ink)}.tab{border:none;background:transparent;padding:19px 7px 19px 0;font-size:12px;font-weight:800;text-align:left;color:var(--grey);position:relative}.tab[aria-selected="true"]{color:var(--ink)}.tab[aria-selected="true"]::after{content:"";position:absolute;height:3px;bottom:-1px;left:0;right:8px;background:var(--ink)}
+    .decision-body{padding:35px 0 28px;min-height:328px}.decision-body-top{display:flex;justify-content:space-between;align-items:start;gap:20px}.decision-code{font:400 78px/1 var(--font-display);letter-spacing:-.05em}.decision-status{border:1px solid #8c9585;border-radius:30px;font:800 9px var(--font-label);letter-spacing:.08em;text-transform:uppercase;padding:9px 12px;white-space:nowrap}
+    .decision-body h3{font:400 40px/1.05 var(--font-display);margin:20px 0 12px;letter-spacing:-.02em}.decision-body p{font-size:14px;line-height:1.8;color:#596052;max-width:610px}.decision-reason{border-top:1px solid var(--line);display:grid;grid-template-columns:130px 1fr;gap:12px;padding:18px 0;font-size:12px}.decision-reason strong{font:800 10px var(--font-label);text-transform:uppercase;letter-spacing:.07em}.decision-reason span{color:#5c6259;line-height:1.65}
+    .accordion{margin-top:38px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.accordion summary{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:20px 0;font:800 11px var(--font-label);letter-spacing:.02em;cursor:pointer;list-style:none}.accordion summary::-webkit-details-marker{display:none}.accordion summary::after{content:'+';font:400 25px var(--font-display)}.accordion[open] summary::after{content:'−'}
+    .scenario-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:9px;padding:6px 0 27px}.scenario{border:1px solid var(--line);padding:16px 12px;border-radius:5px;min-height:114px}.scenario strong{font:800 12px var(--font-label)}.scenario small{font-size:10px;line-height:1.5;color:var(--grey);display:block;margin-top:12px}
+    .economics{background:white}.finance-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:8%;align-items:center}.finance-side h2{max-width:440px}.finance-side p{color:var(--grey);font-size:14px;line-height:1.8;max-width:420px}
+    .financial-card{background:var(--soft);border:1px solid var(--line);padding:31px;border-radius:11px}
+    .financial-top{display:flex;justify-content:space-between;align-items:center;padding-bottom:18px;border-bottom:1px solid #d6ddcc;gap:15px}.financial-top strong{font:800 10px var(--font-label);letter-spacing:.1em;text-transform:uppercase}.financial-top small{font-size:11px;color:var(--grey)}
+    .scenario-value{font:400 clamp(58px,7vw,102px)/1 var(--font-display);letter-spacing:-.055em;margin:27px 0 5px}.scenario-value small{font:700 12px var(--font-label);letter-spacing:0;color:var(--grey)}
+    .fin-disclaimer{font-size:12px;color:#646b5f;line-height:1.6;margin:0 0 30px}
+    .range-wrap{padding:12px 0 4px}.range-head{display:flex;justify-content:space-between;align-items:center;gap:15px;font:800 11px var(--font-label)}.range-head output{font:400 37px/1 var(--font-display)}
+    input[type=range]{width:100%;appearance:none;-webkit-appearance:none;background:linear-gradient(90deg,var(--ink) 0%,var(--ink) 100%);height:3px;margin:28px 0 20px;cursor:pointer}
+    input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:24px;height:24px;border:5px solid var(--lime);background:var(--ink);border-radius:50%;box-shadow:0 0 0 1px var(--ink)}
+    input[type=range]::-moz-range-thumb{width:16px;height:16px;border:4px solid var(--lime);background:var(--ink);border-radius:50%;box-shadow:0 0 0 1px var(--ink)}
+    .range-labels{display:flex;justify-content:space-between;font:700 10px var(--font-label);color:var(--grey)}
+    .formula-line{display:flex;gap:18px;justify-content:space-between;align-items:center;border-top:1px solid #d6ddcc;margin-top:30px;padding-top:20px;font-size:12px;color:var(--grey)}.formula-line strong{font-family:var(--font-label);color:var(--ink);font-size:12px}
+    .finance-reality{margin-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.finance-reality article{padding:21px 19px;border:1px solid var(--line);border-radius:5px}.finance-reality strong{font:400 37px/1 var(--font-display);display:block;margin-bottom:10px}.finance-reality span{font:700 10px/1.6 var(--font-label);letter-spacing:.04em;text-transform:uppercase;color:var(--grey)}
+    .deliverable-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:11px}.deliverable{border:1px solid var(--line);background:white;border-radius:6px;min-height:207px;padding:18px 13px;display:flex;flex-direction:column}.deliverable .m-id{font:400 40px/1 var(--font-display);letter-spacing:-.03em}.deliverable .m-title{font:800 11px/1.5 var(--font-label);margin-top:30px}.deliverable .m-descr{font-size:11px;line-height:1.5;color:var(--grey);margin-top:8px}.deliverable .m-status{font:800 9px var(--font-label);letter-spacing:.07em;text-transform:uppercase;margin-top:auto;padding-top:18px;color:#6b7366}
+    .outcome-band{background:var(--lime);border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);overflow:hidden}
+    .outcome-band .container{padding-top:105px;padding-bottom:105px}.outcome-layout{display:grid;grid-template-columns:1fr 1fr;gap:10%}
+    .outcome-layout h2{font-size:clamp(57px,6.4vw,92px)}.outcome-text{align-self:end}.outcome-text .big-statement{font-size:18px;font-weight:750;line-height:1.6;max-width:490px}.outcome-text p{font-size:14px;line-height:1.9;color:#4d5844;max-width:520px}
+    .outcome-proof{border-top:1px solid var(--ink);margin-top:37px;display:grid;grid-template-columns:repeat(3,1fr)}.outcome-proof article{padding:22px 18px 0 0}.outcome-proof strong{font:400 36px var(--font-display)}.outcome-proof span{font:750 9px/1.6 var(--font-label);text-transform:uppercase;letter-spacing:.06em;display:block;max-width:170px}
+    .principles{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.principle{border-top:1px solid var(--ink);padding:24px 12px 12px 0}.principle .icon{font-family:var(--font-display);font-size:43px;line-height:1}.principle h3{font:400 35px/1 var(--font-display);letter-spacing:-.02em;margin:30px 0 12px}.principle p{font-size:13px;line-height:1.8;color:var(--grey);max-width:330px}
+    .closing-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:10%;margin-top:80px;padding-top:55px;border-top:1px solid var(--line)}
+    .closing-grid h3{font:400 40px/1 var(--font-display);margin:0}.closing-grid p{font-size:13px;line-height:1.85;color:var(--grey);margin-top:20px;max-width:690px}
+    .evidence-meta{font-size:12px;color:var(--grey);line-height:1.85;border-left:1px solid var(--line);padding-left:26px}.evidence-meta strong{display:block;font:800 10px var(--font-label);color:var(--ink);margin-bottom:12px;text-transform:uppercase;letter-spacing:.1em}
+    .contact{background:var(--lime);border-top:1px solid var(--ink);padding:110px 0 42px;overflow:hidden}
+    .contact-top{display:flex;justify-content:space-between;align-items:start;gap:35px}.contact h2{font-size:clamp(70px,8.8vw,132px);max-width:940px;line-height:.88}.contact h2 em{font-style:italic}
+    .contact-copy{margin-top:35px;font-size:16px;line-height:1.7;max-width:560px;font-weight:650}.contact-meta{margin-top:19px;display:flex;flex-wrap:wrap;gap:9px}.skill-pill{display:inline-flex;align-items:center;border:1px solid #8fa276;border-radius:30px;padding:7px 12px;font-weight:750;font-size:9px;letter-spacing:.07em;text-transform:uppercase}
+    .contact-links{margin-top:48px;display:flex;flex-wrap:wrap;gap:12px}.contact-link{display:inline-flex;justify-content:space-between;align-items:center;gap:28px;border:1px solid var(--ink);border-radius:100px;padding:16px 20px;min-width:210px;font:800 11px var(--font-label);background:var(--ink);color:white;transition:transform .2s,background .2s}.contact-link:hover{transform:translateY(-3px);background:#3c4233}.contact-link.secondary{background:transparent;color:var(--ink)}.contact-link.secondary:hover{background:rgba(255,255,255,.5)}.contact-link svg{width:18px;height:18px}
+    .footer{margin-top:102px;padding-top:23px;border-top:1px solid rgba(23,25,21,.4);display:flex;justify-content:space-between;gap:20px;font:700 10px var(--font-label);letter-spacing:.03em}.footer span:last-child{color:#536047}
+    .backtop{align-self:start;display:flex;align-items:center;gap:14px;padding-top:5px;font:800 10px var(--font-label);text-transform:uppercase;letter-spacing:.12em;white-space:nowrap}.backtop span{display:grid;place-items:center;width:44px;height:44px;border:1px solid var(--ink);border-radius:50%;font-size:21px}
+    .mobile-dock{display:none}
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .75s ease,transform .75s cubic-bezier(.2,.75,.1,1)}.reveal.visible{opacity:1;transform:none}
+    .progress{position:fixed;top:0;left:0;height:3px;background:var(--ink);z-index:140;width:0;pointer-events:none}
+    @media(max-width:1080px){.container,.topbar-inner{width:min(100% - 60px,var(--page))}.hero-inner{gap:40px;grid-template-columns:1.15fr .85fr}.hero h1{font-size:clamp(66px,8vw,100px)}.nav{gap:18px}.section-head{grid-template-columns:110px 1fr;gap:28px}.scenario-grid{grid-template-columns:repeat(4,1fr)}.deliverable-grid{grid-template-columns:repeat(4,1fr)}.flow-grid{grid-template-columns:repeat(3,1fr)}.flow-step .s-triangle{display:none}.flow-step{min-height:130px}.flow-detail{grid-template-columns:1fr 2fr}}
+    @media(max-width:760px){html{scroll-padding-top:70px}.container,.topbar-inner{width:calc(100% - 38px)}.topbar{height:66px}.topbar-inner{gap:18px}.brand{font-size:11px}.brand-mark{height:32px;width:32px}.nav-toggle{display:block}.nav{position:absolute;top:66px;left:0;right:0;display:none;background:var(--paper);border-bottom:1px solid var(--line);padding:20px 19px 26px;flex-direction:column;align-items:stretch;gap:0;box-shadow:0 18px 28px rgba(0,0,0,.06)}.nav.open{display:flex}.nav a{padding:14px 6px}.nav-cta{justify-content:center;margin-top:14px}.hero-inner{min-height:auto;padding:69px 0 30px;grid-template-columns:1fr;gap:47px}.hero h1{font-size:clamp(69px,13.4vw,110px);line-height:.9}.hero .lead{font-size:16px}.hero .sublead{font-size:13px}.hero-graphic{max-width:485px;margin:0 16px 0 0}.hero-bottom{gap:24px}.hero-bottom .note{font-size:10px}.hero-bottom .scroll{font-size:0}.rot-label{right:-12px;top:-20px;width:75px;height:75px;font-size:7px}.rot-label span{font-size:20px}.section{padding:82px 0}.section-head{grid-template-columns:1fr;gap:17px;margin-bottom:40px}.section-number{padding:0}h2{font-size:clamp(47px,10vw,68px)}.section-deck{font-size:14px;margin-top:21px}.stats-strip{grid-template-columns:repeat(2,1fr);margin-bottom:80px}.stats-strip article{padding:23px 15px 22px 0}.stats-strip article:nth-child(2){border-right:0;padding-left:18px}.stats-strip article:nth-child(3){border-top:1px solid var(--line)}.stats-strip article:nth-child(4){border-right:0;border-top:1px solid var(--line);padding-left:18px}.big-number{font-size:52px}.overview-grid,.integrity-layout,.calc-grid,.decisions-rail,.finance-grid,.outcome-layout,.closing-grid{grid-template-columns:1fr;gap:40px}.quick-label{margin-bottom:5px}.flow-panel{padding:18px}.flow-grid{grid-template-columns:repeat(2,1fr);gap:8px}.flow-step{min-height:117px;padding:13px}.flow-step .s-icon{margin:7px 0}.flow-step .s-icon svg{width:27px;height:27px}.flow-detail{grid-template-columns:1fr;gap:12px;padding-top:18px;min-height:175px}.flow-detail h3{font-size:31px}.insight-row{grid-template-columns:1fr;gap:12px}.insight-card{padding:23px}.int-callout{font-size:48px}.data-card{padding:23px}.calc-left .section-number{margin-bottom:22px}.eq-card{padding:25px 22px;box-shadow:8px 8px 0 rgba(23,25,21,.09)}.equation{font-size:clamp(32px,7.2vw,50px)}.decisions-rail{gap:26px}.decision-body{min-height:345px}.decision-code{font-size:62px}.decision-body h3{font-size:37px}.decision-reason{grid-template-columns:1fr;gap:5px}.scenario-grid{grid-template-columns:repeat(2,1fr)}.financial-card{padding:25px 20px}.scenario-value{font-size:70px}.finance-reality{gap:8px}.finance-reality article{padding:16px 9px}.finance-reality strong{font-size:30px}.finance-reality span{font-size:9px}.deliverable-grid{grid-template-columns:repeat(2,1fr)}.deliverable{min-height:178px}.outcome-band .container{padding-top:81px;padding-bottom:81px}.outcome-layout h2{font-size:clamp(68px,12vw,100px)}.outcome-proof{gap:7px}.outcome-proof strong{font-size:30px}.principles{grid-template-columns:1fr;gap:12px}.principle h3{margin-top:17px}.closing-grid{margin-top:55px;padding-top:40px}.evidence-meta{padding-left:18px}.contact{padding:84px 0 30px}.contact-top{display:block}.contact h2{font-size:clamp(76px,13.5vw,110px)}.contact-links{margin-top:35px}.contact-link{width:100%}.footer{margin-top:80px;flex-direction:column;gap:8px;font-size:9px}.backtop{display:none}.mobile-dock{position:fixed;z-index:80;bottom:12px;left:12px;right:12px;display:flex;gap:7px;background:rgba(251,252,248,.92);backdrop-filter:blur(14px);padding:7px;border:1px solid var(--line);border-radius:40px;box-shadow:0 9px 35px rgba(20,25,16,.18)}.mobile-dock a{flex:1;display:flex;justify-content:center;align-items:center;gap:7px;border-radius:30px;padding:11px 8px;background:var(--ink);color:white;font:800 10px var(--font-label)}.mobile-dock a:last-child{background:var(--lime);color:var(--ink)}.mobile-dock svg{width:15px;height:15px}body{padding-bottom:60px}}
+    @media(max-width:400px){.hero h1{font-size:62px}.btn{gap:12px;font-size:10px}.hero-card{padding:20px}.hero-bottom .note{font-size:9px}.target-line strong{font-size:37px}.data-card{padding:18px}.equation{font-size:31px}.decision-status{font-size:8px;padding:7px}.decision-tablist .tab{font-size:10px}.contact h2{font-size:69px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}.bar-fill{width:84.444%}}
+
+/* Revision: disciplined industrial portfolio design */
+:root{--font-display:'Montserrat',Arial,sans-serif;--shadow:none;--line:#d8dfce;--paper:#fbfcf8;--grey:#555d53;--soft:#f4f6ef}
+body{font-family:'Mulish',Arial,sans-serif;font-size:16px;line-height:1.7}
+.hero::before{display:none}
+.hero-inner{min-height:690px;grid-template-columns:minmax(0,1.3fr) minmax(280px,.7fr);gap:45px 65px;padding:95px 0 36px}
+.hero-copy{max-width:830px}
+.hero h1{font:750 clamp(45px,5.25vw,78px)/1.105 var(--font-display);letter-spacing:-.052em;margin:0 0 28px;max-width:920px;text-wrap:balance}
+.hero h1 em,h2 em,.outcome-layout h2 em,.contact h2 em,.pull-quote em,.int-callout em{font-style:normal;font-weight:inherit}
+.hero .lead{font:650 clamp(17px,1.45vw,20px)/1.5 var(--font-body);max-width:680px;letter-spacing:-.012em}
+.hero .sublead{font-size:14px;line-height:1.8;max-width:660px;color:#3e483a}
+.hero-card{border:1px solid var(--ink);background:rgba(255,255,255,.78);padding:28px;box-shadow:none;transform:none;border-radius:6px}
+.hero-card:hover{transform:none}
+.hero-graphic{margin:0}.card-top{margin-bottom:28px}.target-line{align-items:end;gap:8px;margin-top:16px;flex-wrap:wrap}.target-line strong{font:700 45px/1.1 var(--font-label)}
+.target-line small{line-height:1.7}.bar-track{margin:19px 0 28px;height:14px}.hero-card-note{font-size:12px;line-height:1.7}
+.hero-bottom .note{max-width:850px;font-size:11px}.hero-bottom{padding-top:22px}
+.btn,.nav-cta,.contact-link{border-radius:5px}.btn{font-size:11px}
+.section{padding:92px 0}.section-head{margin-bottom:50px}
+h2{font:720 clamp(34px,4vw,58px)/1.14 var(--font-display);letter-spacing:-.045em;text-wrap:balance}
+.section-deck{font-size:15px;line-height:1.8}
+.big-number{font:730 clamp(37px,4vw,57px)/1.1 var(--font-label);letter-spacing:-.045em}
+.stats-strip{margin-bottom:96px}.stats-strip article{padding-top:25px;padding-bottom:27px}
+.pull-quote{font-family:var(--font-label)!important;font-size:clamp(24px,2.9vw,37px)!important;font-weight:650!important;line-height:1.3!important;letter-spacing:-.035em!important}
+.flow-panel,.data-card,.financial-card,.insight-card,.deliverable,.scenario,.eq-card{border-radius:5px;box-shadow:none}
+.flow-step{border-radius:3px}.flow-detail h3,.insight-card h3,.decision-body h3,.principle h3,.closing-grid h3{font-family:var(--font-label);font-weight:650;letter-spacing:-.035em;line-height:1.23}
+.flow-detail h3{font-size:27px}.insight-card h3{font-size:23px}
+.int-callout{font:680 clamp(33px,3.25vw,48px)/1.18 var(--font-label);letter-spacing:-.035em}
+.integrity-metrics .num,.legend-row .legend-n,.decision-code,.scenario-value,.finance-reality strong,.deliverable .m-id,.outcome-proof strong,.principle .icon,.range-head output{font-family:var(--font-label);font-weight:700;letter-spacing:-.035em}
+.calc-left h2{font-size:clamp(35px,3.75vw,55px)}
+.eq-card{box-shadow:none;border:1px solid var(--ink)}
+.equation{font:620 clamp(27px,3vw,42px)/1.35 var(--font-label);letter-spacing:-.04em}
+.equation strong{font-weight:750}.decision-code{font-size:65px}.decision-body h3{font-size:28px}
+.scenario-value{font-size:clamp(55px,6vw,82px)}
+.deliverable{min-height:195px}.deliverable .m-id{font-size:31px}
+.outcome-layout h2{font-size:clamp(40px,4.4vw,65px)}
+.outcome-proof strong{font-size:28px}
+.principle .icon{font-size:25px}.principle h3{font-size:25px}
+.closing-grid h3{font-size:24px}.contact h2{font:730 clamp(48px,5.4vw,78px)/1.08 var(--font-label);letter-spacing:-.05em}.contact-copy{font-weight:500}
+.contact-link{border-radius:5px}.skill-pill{border-radius:3px}.abstract-section{background:#fff;padding:98px 0 105px;border-bottom:1px solid var(--line)}
+.abstract-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:10%;align-items:start}
+.abstract-intro .section-number{font-size:10px;letter-spacing:.12em;margin:0 0 21px}
+.abstract-intro h2{font-size:clamp(35px,3.75vw,53px);max-width:520px}
+.abstract-content{border-left:1px solid var(--line);padding-left:50px}
+.abstract-content p{font-size:14.5px;line-height:1.89;color:var(--grey);margin:0 0 20px}
+.abstract-content .abstract-lead{font-size:17px;line-height:1.75;color:var(--ink)}
+.abstract-facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.abstract-facts span{font:700 10px/1.4 var(--font-label);padding:9px 11px;background:var(--soft);border:1px solid var(--line);border-radius:3px}
+.abstract-result{display:flex;gap:18px;align-items:start;background:var(--lime);border:1px solid #dae9b9;padding:21px;margin-top:25px}
+.abstract-check{width:27px;height:27px;flex:0 0 27px;display:grid;place-items:center;border:1px solid var(--ink);border-radius:50%;font-size:14px}
+.abstract-result strong{font:750 12px var(--font-label);display:block;margin-bottom:6px}
+.abstract-result div span{font-size:13px;line-height:1.7;color:#3a4532;display:block}
+.abstract-content p.abstract-provenance{font-size:11px;line-height:1.75;color:#737a6f;margin:18px 0 0}
+@media(max-width:1080px){.hero-inner{min-height:620px;gap:36px;grid-template-columns:1.1fr .9fr}.hero h1{font-size:clamp(45px,5.6vw,67px)}.abstract-grid{gap:6%}.abstract-content{padding-left:31px}}
+@media(max-width:760px){.hero-inner{grid-template-columns:1fr;min-height:auto;padding:63px 0 29px;gap:39px}.hero h1{font-size:clamp(41px,9vw,64px);line-height:1.13}.hero-graphic{width:100%;max-width:530px}.hero-bottom{margin-top:0}.section{padding:75px 0}h2{font-size:clamp(33px,8.3vw,51px)}.stats-strip{margin-bottom:68px}.abstract-section{padding:70px 0}.abstract-grid{grid-template-columns:1fr;gap:24px}.abstract-content{border-left:0;border-top:1px solid var(--line);padding:28px 0 0}.abstract-intro h2{font-size:clamp(32px,8vw,46px)}.abstract-content .abstract-lead{font-size:16px}.insight-card h3,.principle h3{font-size:23px}.int-callout{font-size:clamp(30px,7vw,41px)}.eq-card{box-shadow:none}.equation{font-size:clamp(26px,6vw,40px)}.outcome-layout h2{font-size:clamp(39px,9vw,58px)}.contact h2{font-size:clamp(45px,11vw,69px)}}
+@media(max-width:400px){.hero h1{font-size:39px}.equation{font-size:25px}.hero-card{padding:19px}.contact h2{font-size:44px}}
+@media(prefers-reduced-motion:reduce){.hero .bar-fill{width:84.444%!important}}
+
+
+/* Recruiter-first project framing */
+.hero-inner{grid-template-columns:minmax(0,1.24fr) minmax(310px,.76fr);min-height:680px;gap:35px 52px}
+.hero-copy{max-width:900px}
+.hero h1{font-size:clamp(38px,4.35vw,66px);font-weight:760;line-height:1.12;letter-spacing:-.05em;max-width:850px;text-wrap:balance}
+.hero .lead{max-width:710px}
+.hero-graphic{align-self:center}
+.nowrap{white-space:nowrap}
+.demo-note{border-top:1px solid var(--line);padding-top:14px;margin-top:28px!important;font-size:11px!important;color:#757c70!important;line-height:1.75}
+@media(max-width:1080px){.hero-inner{grid-template-columns:minmax(0,1fr) minmax(270px,.85fr)}.hero h1{font-size:clamp(37px,4.9vw,56px)}}
+@media(max-width:760px){.hero-inner{grid-template-columns:1fr;min-height:auto}.hero h1{font-size:clamp(35px,8vw,53px);line-height:1.15}.hero-graphic{max-width:530px}}
+@media(max-width:400px){.hero h1{font-size:34px}}
+
+  </style>
+  <noscript><style>.reveal{opacity:1!important;transform:none!important}.hero .bar-fill{width:84.444%!important}</style></noscript>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to case study</a>
+  <div class="progress" aria-hidden="true" id="scrollProgress"></div>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="#top" class="brand" aria-label="Sandesh Subedi, back to top"><span class="brand-mark">SS</span><span>Sandesh Subedi</span></a>
+      <button class="nav-toggle" id="navToggle" type="button" aria-controls="primaryNav" aria-expanded="false" aria-label="Open navigation"><span></span><span></span><span></span></button>
+      <nav class="nav" id="primaryNav" aria-label="Main navigation">
+        <a href="#abstract">Abstract</a><a href="#investigation">Process</a><a href="#decisions">Solutions</a><a href="#outcome">Results</a><a href="#contact" class="nav-cta">Contact <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+  <main id="main">
+    <section class="hero" id="top" aria-labelledby="heroTitle">
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <h1 id="heroTitle">How We Evaluated Increasing Actuator Production from <span class="nowrap">380 to 450</span> Units per Shift</h1>
+          <p class="lead">We investigated what it would take to produce 70 more actuators per shift, without overlooking testing capacity, staffing limits, or Quality requirements.</p>
+          <p class="sublead">Our team studied the assembly process, reconstructed functional-test workload, reviewed historical Quality records, and evaluated seven possible line configurations. We used those findings to make a decision grounded in the evidence, not just the production target.</p>
+          <div class="actions"><a class="btn dark" href="#abstract">Read the project abstract <span class="arrow" aria-hidden="true">↗</span></a><a class="btn light" href="#outcome">View the findings <span class="arrow" aria-hidden="true">↓</span></a></div>
+        </div>
+        <div class="hero-graphic" aria-label="Comparison of a 450 unit production target and a conditional operational reference of 380 units">
+          <div class="hero-card">
+            <div class="card-top"><div class="kicker">Production goal vs. operating reference</div><span class="card-id">ACTUATOR ASSEMBLY</span></div>
+            <div class="target-line"><div><small>Target</small><strong>450</strong></div><small>Quality-accepted units / shift</small></div>
+            <div class="target-line"><div><small>Operating reference</small><strong>380</strong></div><small>conditional units / shift</small></div>
+            <div class="bar-track" aria-hidden="true"><div class="bar-fill"></div><div class="bar-gap">70</div></div>
+            <div class="hero-card-note"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 10v6m0-9v1"/></svg><span><strong>70-unit planning gap.</strong> The 380-unit reference was conditional and did not certify sustainable capacity. No 450-unit performance claim was made.</span></div>
+          </div>
+        </div>
+        <div class="hero-bottom"><div class="note"><strong>Project scope</strong> &nbsp; Manufacturing systems · Functional-test capacity · Process analysis · Engineering decision support</div><a href="#abstract" class="scroll" aria-label="Scroll to the project abstract">Read summary <span class="scroll-icon" aria-hidden="true"></span></a></div>
+      </div>
+    </section>
+
+
+    <section class="abstract-section" id="abstract" aria-labelledby="abstractTitle">
+      <div class="container abstract-grid">
+        <div class="abstract-intro reveal"><div class="section-number">PROJECT ABSTRACT</div><h2 id="abstractTitle">What we set out to improve, how we studied it, and what we found</h2><div class="abstract-facts"><span>Mixed-model actuator line</span><span>7 feasibility milestones</span><span>Cross-functional decision process</span></div></div>
+        <div class="abstract-content reveal"><p class="abstract-lead">Our goal was to evaluate a production increase from a <strong>380-unit operating reference to 450 Quality-accepted actuators per regular shift</strong>. We needed to determine whether the whole assembly and testing system could support the target, not simply whether one station could work faster.</p><p>We mapped the six-step production flow, reconstructed the time each actuator occupied the functional-test fixture, checked staffing and equipment alternatives, and reconciled historical test records. The analysis exposed a gap between programmed test time and real fixture demand. Because no complete, qualified configuration demonstrated the target, we recommended specific evidence gates and a management-held strategy rather than launching an unsupported upgrade.</p><div class="abstract-result"><span class="abstract-check" aria-hidden="true">✓</span><div><strong>Our outcome</strong><span>We completed the feasibility study, documented the decision and handed off remaining responsibilities. The 450-unit target was not demonstrated, so we did not certify it.</span></div></div></div>
+      </div>
+    </section>
+
+    <section class="section" id="overview" aria-labelledby="overviewTitle">
+      <div class="container">
+        <div class="stats-strip reveal" aria-label="Case study at a glance">
+          <article><div class="big-number">450<sup>01</sup></div><div class="metric-caption">Strategic capacity requirement</div><div class="metric-small">Unique Quality-accepted units per regular shift</div></article>
+          <article><div class="big-number">1,137<sup>02</sup></div><div class="metric-caption">Unique test serials examined</div><div class="metric-small">Controlled historical evidence population</div></article>
+          <article><div class="big-number">07<sup>03</sup></div><div class="metric-caption">Model configurations screened</div><div class="metric-small">C0 to C6, with no complete viable proof</div></article>
+          <article><div class="big-number">00<sup>04</sup></div><div class="metric-caption">Unverified gains credited</div><div class="metric-small">No hypothetical improvement became certified output</div></article>
+        </div>
+        <div class="section-head reveal"><div class="section-number">01 <span>/</span> Project brief</div><div><h2 id="overviewTitle">The problem: a 70-unit gap in the production plan</h2><p class="section-deck">We evaluated a proposed increase from the conditional 380-unit operating reference to 450 unique Quality-accepted actuators per regular shift. The assessment required evidence of a complete, staffed and qualified production configuration, not an isolated station calculation.</p></div></div>
+        <div class="overview-grid">
+          <div class="overview-left reveal"><div class="quick-label">Our evaluation criteria</div><p class="pull-quote">We needed a complete production configuration that aligned <em>fixture capacity, labor availability, valid evidence and Quality acceptance.</em></p><p class="section-intro">We treated production capacity as a system feasibility problem. A single-station improvement could not validate the output target if shared resources, staffing or downstream acceptance remained constrained.</p></div>
+          <div class="overview-right reveal"><div class="quick-label">Case file</div><ul class="facts"><li><strong>Engineering focus</strong><span>Industrial engineering · Line capacity, test systems, Quality data and operational feasibility</span></li><li><strong>Environment</strong><span>Mixed-model actuator assembly, six primary operations, shared functional-test resources</span></li><li><strong>Mandate</strong><span>Establish an evidence-backed path toward 450 accepted units per regular shift</span></li><li><strong>Methods</strong><span>Gemba-style investigation, time-study reconciliation, capacity bounds, configuration screening, Quality data integrity, economics, decision gates</span></li><li><strong>Cross-functional review</strong><span>Operations, Quality, Maintenance, Production Planning, Finance, Commercial and Document Control</span></li></ul><p class="micro-note"><strong>Reading the figures:</strong> Observed counts, reconstructed workloads, planning assumptions and hypothetical contribution scenarios are reported separately. The 380-unit operating reference is conditional, not a certified sustainable rate.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" id="investigation" aria-labelledby="investigationTitle">
+      <div class="container">
+        <div class="section-head reveal"><div class="section-number">02 <span>/</span> Investigate</div><div><h2 id="investigationTitle">We traced the assembly process to find the real bottlenecks</h2><p class="section-deck">We traced the six operation groups, variation in qualified staffing, the handling of test failures and the difference between programmed test time and total fixture occupation. This established the real questions our capacity model needed to answer.</p></div></div>
+        <div class="flow-panel reveal">
+          <div class="flow-meta"><span class="micro">Six-operation production flow</span><span class="click-hint">Select a step to inspect ↘</span></div>
+          <div class="flow-grid" role="group" aria-label="Explore six production operations">
+            <button type="button" class="flow-step" data-stage="0" aria-pressed="false"><span class="s-index">01</span><span class="s-icon"><svg viewBox="0 0 40 40"><path d="M7 11h26v20H7zM13 11V7h14v4M11 17h18M11 24h18"/></svg></span><span class="s-title">Housing preparation</span><span class="s-triangle">›</span></button>
+            <button type="button" class="flow-step" data-stage="1" aria-pressed="false"><span class="s-index">02</span><span class="s-icon"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="10"/><circle cx="20" cy="20" r="4"/><path d="M20 4v6m0 20v6M4 20h6m20 0h6M8.5 8.5l5 5m13 13 5 5m0-23-5 5m-13 13-5 5"/></svg></span><span class="s-title">Motor and gear</span><span class="s-triangle">›</span></button>
+            <button type="button" class="flow-step" data-stage="2" aria-pressed="false"><span class="s-index">03</span><span class="s-icon"><svg viewBox="0 0 40 40"><path d="M5 11h30v18H5zM5 17h30m-24 7h5m8 0h5M13 6v5m14-5v5m-14 18v5m14-5v5"/></svg></span><span class="s-title">Electrical assembly</span><span class="s-triangle">›</span></button>
+            <button type="button" class="flow-step" data-stage="3" aria-pressed="false"><span class="s-index">04</span><span class="s-icon"><svg viewBox="0 0 40 40"><path d="M8 10h24v20H8zM13 10V5m14 5V5M13 35v-5m14 5v-5M9 20h22m-10-6v12"/></svg></span><span class="s-title">Final mechanical</span><span class="s-triangle">›</span></button>
+            <button type="button" class="flow-step" data-stage="4" aria-pressed="true"><span class="s-index">05</span><span class="s-icon"><svg viewBox="0 0 40 40"><rect x="6" y="6" width="28" height="22" rx="2"/><path d="M14 34h12M20 28v6M10 20l6-6 5 5 8-8"/></svg></span><span class="s-title">Functional test</span><span class="s-triangle">›</span></button>
+            <button type="button" class="flow-step" data-stage="5" aria-pressed="false"><span class="s-index">06</span><span class="s-icon"><svg viewBox="0 0 40 40"><path d="M7 11l13-7 13 7v18l-13 7-13-7zM7 11l13 7 13-7M20 18v18m-7-22 13-7"/></svg></span><span class="s-title">Inspection and pack</span></button>
+          </div>
+          <div class="flow-detail" id="stageDetail" aria-live="polite"><div><span class="tag" id="stageTag">SYSTEM CONSTRAINT</span><h3 id="stageTitle">Functional test</h3></div><p id="stageCopy">Test programming was only part of the actual fixture workload. Loading, connection, unloading, repeats, diagnostics and intercycle activity demanded separate evidence and resource accounting.</p></div>
+        </div>
+        <div class="insight-row">
+          <article class="insight-card reveal"><div class="micro">Field insight / 01</div><h3>Staffing flexibility depended on qualifications and work overlap.</h3><p>We evaluated changes in operator assignments, variant mix, support duties and shared-resource timing. The model had to account for work conflicts that station averages could hide.</p></article>
+          <article class="insight-card accent-card reveal"><div class="micro">Field insight / 02</div><h3>Programmed test time understated total fixture occupation.</h3><p>We separated program execution from connection, loading, unloading, intercycle time, diagnostics and repeat tests to reconstruct a more useful workload reference.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="evidence" aria-labelledby="evidenceTitle">
+      <div class="container">
+        <div class="section-head reveal"><div class="section-number">03 <span>/</span> Trust the data</div><div><h2 id="evidenceTitle">We verified test records before using them as evidence</h2><p class="section-deck">We reconciled the serial-level test population before using the data in a capacity argument. We kept repeat tests, missing histories, inspections and Quality acceptance separate so the analysis would not overstate valid output.</p></div></div>
+        <div class="integrity-layout">
+          <div class="reveal"><div class="eyebrow"><span class="dot"></span> Evidence integrity</div><div class="int-callout">Test passes and Quality-accepted units are different measures.</div><p class="int-copy">The controlled Phase 2 population contained 1,137 unique tested serials. Of those, 123 histories were incomplete and required two different limitation classes. Those gaps stayed visible all the way through closeout.</p><div class="integrity-metrics"><span class="num">123</span><span class="small">Incomplete histories disclosed, not reconstructed</span></div></div>
+          <div class="data-card reveal" aria-label="Historical test record completeness chart">
+            <div class="data-card-top"><span>Phase 2 evidence ledger</span><small>1,137 unique serials</small></div>
+            <div class="stacked" role="img" aria-label="1,014 complete records, 81 bounded incomplete records, 42 unbounded incomplete records"><span class="seg1"></span><span class="seg2"></span><span class="seg3"></span></div>
+            <div class="legend-row"><span class="legend-swatch" style="background:#171915"></span><div><strong>Complete histories</strong><small>89.18% of unique tested serials</small></div><span class="legend-n">1,014</span></div>
+            <div class="legend-row"><span class="legend-swatch" style="background:#858d78"></span><div><strong>Bounded incomplete</strong><small>7.12%, constrained available evidence</small></div><span class="legend-n">81</span></div>
+            <div class="legend-row"><span class="legend-swatch" style="background:#d1d7c6;border:1px solid #a8b29d"></span><div><strong>Unbounded incomplete</strong><small>3.69%, unresolved record boundaries</small></div><span class="legend-n">42</span></div>
+            <div class="data-clarity"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 10v6m0-9v1"/></svg><span><strong>Do not relabel:</strong> the historical 98.33% period-end test-pass proportion is not a unique Quality-acceptance yield. Test passes, retests, inspections, accepted units, ERP postings and shipments are distinct populations.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section calculation" id="capacity" aria-labelledby="capacityTitle">
+      <div class="container calc-grid">
+        <div class="calc-left reveal"><div class="section-number">04 <span>/</span> Model the constraint</div><h2 id="capacityTitle">We checked whether testing could fit inside a regular shift</h2><p>We compared a legacy program-time estimate with the reconstructed fixture-occupation reference. This calculation tests one necessary capacity condition; it does not certify sustainable operation or predict accepted output.</p></div>
+        <div class="eq-card reveal"><div class="eq-top"><strong>Interactive capacity screen</strong><span>One fixture / 450 tested units</span></div>
+          <div class="seg-toggle" role="group" aria-label="Select test workload model"><button id="legacyBtn" type="button" aria-pressed="false">Legacy assumption</button><button id="reconstructedBtn" type="button" aria-pressed="true">Reconstructed occupation</button></div>
+          <div class="equation" id="eqDisplay" aria-live="polite">450 <span class="times">×</span> 73.21 s <span class="times">÷</span> 60 <span class="times">=</span> <strong>549.1 min</strong></div>
+          <div class="eq-sub" id="eqCaption">Conditional weighted fixture occupation per unique tested serial. Includes more than program execution and is not a certified forward Quality-acceptance rate.</div>
+          <div class="capacity-graphic"><div class="capacity-top"><span id="barLabel">Required fixture occupation</span><span id="barNumber">549.1 min</span></div><div class="capacity-track" role="img" id="capChart" aria-label="Modeled demand 549.1 minutes exceeds the 510 minute full shift"><div class="capacity-limit" aria-hidden="true"></div><div class="capacity-fill" id="capacityFill" style="width:91.51%"></div></div></div>
+          <div class="eq-foot" id="capacityConclusion"><strong>Necessary-condition shortfall:</strong> 549.1 required fixture-minutes exceed the entire 510-minute elapsed shift by 39.1 minutes, even before allowance for gaps or other resources. A complete 450-unit accepted-output configuration was not demonstrated.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="decisions" aria-labelledby="decisionsTitle">
+      <div class="container">
+        <div class="section-head reveal"><div class="section-number">05 <span>/</span> Decision architecture</div><div><h2 id="decisionsTitle">We compared the equipment, time and staffing options</h2><p class="section-deck">We evaluated three engineering levers plus a broader manufacturing-system strategy. Each option was screened for feasibility, missing evidence, required qualification and its ability to work as part of a complete production system.</p></div></div>
+        <div class="decisions-rail">
+          <div class="decision-side reveal"><div class="eyebrow"><span class="dot"></span> Explore the tradeoffs</div><p>Select each alternative to see what it could address, which evidence was missing and why it did not create approved production capacity.</p><div class="micro-note">A second fixture passing an aggregate fixture-minute calculation did not prove routing, operator availability, upstream flow or Quality qualification.</div></div>
+          <div class="decision-workspace reveal">
+            <div class="decision-tablist" role="tablist" aria-label="Technical alternatives"><button class="tab" id="tab-d1" type="button" data-decision="d1" role="tab" aria-selected="true" aria-controls="decisionPanel" tabindex="0">D1 / Fixture</button><button class="tab" id="tab-d2" type="button" data-decision="d2" role="tab" aria-selected="false" aria-controls="decisionPanel" tabindex="-1">D2 / Time</button><button class="tab" id="tab-d3" type="button" data-decision="d3" role="tab" aria-selected="false" aria-controls="decisionPanel" tabindex="-1">D3 / Labor</button><button class="tab" id="tab-option" type="button" data-decision="option" role="tab" aria-selected="false" aria-controls="decisionPanel" tabindex="-1">Option C</button></div>
+            <div class="decision-body" id="decisionPanel" role="tabpanel" aria-labelledby="tab-d1" tabindex="0"><div class="decision-body-top"><span class="decision-code" id="decisionCode">D1</span><span class="decision-status" id="decisionStatus">Evidence path blocked</span></div><h3 id="decisionTitle">Second test-fixture pathway</h3><p id="decisionSummary">Adding a fixture could relieve aggregate occupation demand, but the equipment-specific architecture, qualification, routing and supporting resources were not verified.</p><div class="decision-reason"><strong>What we examined</strong><span id="decisionTest">Conditional single-versus-multiple-fixture capacity bounds and configuration dependencies.</span></div><div class="decision-reason"><strong>Why it stopped</strong><span id="decisionStop">Generic candidate information could not qualify a production-ready second fixture or prove a complete operating configuration.</span></div></div>
+          </div>
+        </div>
+        <details class="accordion reveal"><summary>See the seven integrated configurations screened, C0 to C6</summary><div class="scenario-grid"><div class="scenario"><strong>C0</strong><small>Existing approved system. Conditional station-screen failures.</small></div><div class="scenario"><strong>C1</strong><small>Mechanical transfer. Optimistic necessary-condition screen still failed.</small></div><div class="scenario"><strong>C2</strong><small>Electrical transfer. Optimistic necessary-condition screen still failed.</small></div><div class="scenario"><strong>C3</strong><small>Combined transfers. Both optimistic station screens still failed.</small></div><div class="scenario"><strong>C4</strong><small>Hypothetical second fixture. Aggregate-minute conditionally passed; complete system unresolved.</small></div><div class="scenario"><strong>C5</strong><small>Qualified support concept. No executable support schedule established.</small></div><div class="scenario"><strong>C6</strong><small>Integrated concept. No complete 450-unit configuration demonstrated.</small></div></div></details>
+      </div>
+    </section>
+
+    <section class="section economics" id="economics" aria-labelledby="economicsTitle"><div class="container">
+      <div class="section-head reveal"><div class="section-number">06 <span>/</span> Economics</div><div><h2 id="economicsTitle">We tested the business case without counting hypothetical savings</h2><p class="section-deck">We separated hypothetical contribution scenarios from actual resource use, recorded documentary delivery cost, unpaid invoices and unresolved cost classifications. This kept the economic recommendation traceable and defensible.</p></div></div>
+      <div class="finance-grid">
+        <div class="finance-side reveal"><div class="quick-label">Decision rule</div><p class="pull-quote">Conditional contribution estimates were decision inputs, not realized gains.</p><p>The M5 economic model used 240 annual shifts and $50 contribution per additional accepted unit. Try the scenario values. The interface updates the hypothetical result, while realized incremental contribution remains zero because no qualifying additional output was demonstrated.</p></div>
+        <div class="financial-card reveal"><div class="financial-top"><strong>M5 / Sensitivity explorer</strong><small>Illustrative, not realized</small></div><div class="scenario-value" id="scenarioValue" aria-live="polite">$0 <small>/ yr</small></div><p class="fin-disclaimer">Conditional annual gross contribution. No capital investment or operating gain was approved or realized.</p><div class="range-wrap"><div class="range-head"><span>Hypothetical additional accepted units / shift</span><output id="scenarioUnits" for="scenarioInput">0</output></div><input id="scenarioInput" type="range" min="0" max="3" value="0" step="1" aria-label="Hypothetical added accepted units per shift"><div class="range-labels" aria-hidden="true"><span>0</span><span>20</span><span>40</span><span>70</span></div></div><div class="formula-line"><span>Annual contribution = ΔQ × 240 shifts × $50 / unit</span><strong>Realized: $0</strong></div></div>
+      </div>
+      <div class="finance-reality reveal"><article><strong>67.75<span style="font-size:15px"> h</span></strong><span>Engineering hours used of 246.50 authorized</span></article><article><strong>178.75<span style="font-size:15px"> h</span></strong><span>Unused authorization, frozen, not cash savings</span></article><article><strong>$0</strong><span>Cash received on $3,300 issued invoices</span></article></div>
+      <p class="micro-note" style="margin-top:27px">Other distinct populations: 7 of 10 hours of protected operator time used; 6 of 8 recovery-reserve hours used; 12.70 hours / $1,143 recorded documentary delivery cost; 50.25 hours of separate internal commercial/readiness effort; $175 earlier proposal-screen cost pending posting. None of these populations was converted into an unsupported savings or revenue claim.</p>
+    </div></section>
+
+    <section class="section" id="deliverables" aria-labelledby="deliverablesTitle"><div class="container">
+      <div class="section-head reveal"><div class="section-number">07 <span>/</span> The work</div><div><h2 id="deliverablesTitle">We turned our findings into seven decision-ready deliverables</h2><p class="section-deck">We organized the assessment into seven milestones, moving from charter and equipment evidence to integrated feasibility, economic scenarios, a management recommendation and gated future-work proposals.</p></div></div>
+      <div class="deliverable-grid reveal"><article class="deliverable"><span class="m-id">M1</span><span class="m-title">Charter activation</span><span class="m-descr">Scope, interfaces, ownership and control rules.</span><span class="m-status">Complete</span></article><article class="deliverable"><span class="m-id">M2</span><span class="m-title">Test alternatives</span><span class="m-descr">Fixture evidence, paths and unresolved qualification.</span><span class="m-status">Released</span></article><article class="deliverable"><span class="m-id">M3</span><span class="m-title">Mechanical / electrical</span><span class="m-descr">Station capacity and support scheduling scenarios.</span><span class="m-status">Released</span></article><article class="deliverable"><span class="m-id">M4</span><span class="m-title">Integrated feasibility</span><span class="m-descr">Complete-configuration screen against 450.</span><span class="m-status">Released</span></article><article class="deliverable"><span class="m-id">M5</span><span class="m-title">Conditional economics</span><span class="m-descr">Costs, gaps and hypothetical gross contribution.</span><span class="m-status">Released</span></article><article class="deliverable"><span class="m-id">M6</span><span class="m-title">Engineering recommendation</span><span class="m-descr">Management options with explicit limitations.</span><span class="m-status">Released</span></article><article class="deliverable"><span class="m-id">M7</span><span class="m-title">Validation proposals</span><span class="m-descr">Gated work plans, not permission to execute.</span><span class="m-status">Released</span></article></div>
+      <div class="insight-row" style="margin-top:25px"><article class="insight-card reveal"><div class="micro">Cross-functional leadership</div><h3>We aligned engineering decisions with functional authority.</h3><p>Quality controlled acceptance and evidence release. Operations controlled the daily executable. Maintenance retained fixture corrective action. Finance retained receivables and cost reconciliation. Document Control preserved released baselines.</p></article><article class="insight-card reveal"><div class="micro">Commercial judgment</div><h3>We screened commercial requests against scope and resource limits.</h3><p>We separated controlled information requests from technical execution and warranty commitments. When proposed terms introduced unlimited audit, retention or capacity obligations, we maintained the approval boundaries and closed the negotiation without award.</p></article></div>
+    </div></section>
+
+    <section class="outcome-band" id="outcome" aria-labelledby="outcomeTitle"><div class="container"><div class="outcome-layout"><div class="reveal"><div class="section-number">08 <span>/</span> The outcome</div><h2 id="outcomeTitle" style="margin-top:30px">What we delivered and what remained unresolved</h2></div><div class="outcome-text reveal"><p class="big-statement">We completed the feasibility scope and delivered a documented management decision.</p><p>The integrated assessment did not demonstrate a complete configuration capable of sustainably producing 450 unique Quality-accepted actuators per regular shift. The feasibility work was completed and formally closed. Option C remained a strategic watch, Stage V closed without execution, and every continuing obligation had an accepted owner.</p><p>The recorded operating history totaled 109,760 unique Quality acceptances across 289 regular shifts, with 192 consecutive fault-free FT-A01 shifts. These operating observations did not close the permanent corrective action or certify sustainable 380- or 450-unit capability.</p></div></div><div class="outcome-proof reveal"><article><strong>7 / 7</strong><span>Phase 3 feasibility milestones completed</span></article><article><strong>0</strong><span>Unapproved implementation or trial launches</span></article><article><strong>Closed</strong><span>With documented limitations and accepted handoffs</span></article></div></div></section>
+
+    <section class="section alt" id="reflection" aria-labelledby="reflectionTitle"><div class="container"><div class="section-head reveal"><div class="section-number">09 <span>/</span> Methodology</div><div><h2 id="reflectionTitle">What guided our engineering decisions</h2><p class="section-deck">Our working approach followed three principles: investigate the full production system, make every assumption and evidence limitation traceable, and package technical conclusions into decisions with explicit owners.</p></div></div>
+      <div class="principles"><article class="principle reveal"><span class="icon">01.</span><h3>Understand the whole system.</h3><p>We mapped the process sequence and treated fixture occupation, qualified staffing, upstream work and Quality disposition as connected capacity constraints.</p></article><article class="principle reveal"><span class="icon">02.</span><h3>Make evidence traceable.</h3><p>We classified recorded facts, reconstructed estimates, uncertainty bounds and hypothetical scenarios separately, preserving incomplete histories and Quality definitions.</p></article><article class="principle reveal"><span class="icon">03.</span><h3>Make decisions executable.</h3><p>We translated analysis into reviewed alternatives, staged approval gates, resource ceilings, ownership transfers and a management recommendation supported by the evidence.</p></article></div>
+      <div class="closing-grid"><div class="reveal"><h3>How we structured the work</h3><p>We organized the investigation around shop-floor process mapping, traceable test-record populations, reconstructed equipment workload and integrated configuration reviews. Our final recommendation separated observed operating performance from conditional capacity estimates, and assigned each unresolved responsibility to its functional owner.</p><p class="demo-note"><strong>Portfolio demonstration:</strong> This on-site-style project narrative is adapted from a structured engineering simulation, not independently verified employment or customer work.</p></div><div class="evidence-meta reveal"><strong>Limits of the evidence</strong>That 450 units were achieved. That a modeled fixture workload certifies accepted output. That missing records were reconstructed. That unused hours equal cash savings. That invoiced amounts were collected. Or that a formally closed project still carried permission to restart.</div></div>
+    </div></section>
+
+    <section class="contact" id="contact" aria-labelledby="contactTitle"><div class="container"><div class="contact-top"><div><div class="eyebrow"><span class="dot"></span> Sandesh Subedi / Industrial Engineer</div><h2 id="contactTitle" style="margin-top:28px">Let's connect.</h2><p class="contact-copy">Industrial engineering work centered on manufacturing systems, capacity analysis, evidence quality and implementation-ready decision support. Open to full-time opportunities and relocation within the United States.</p><div class="contact-meta"><span class="skill-pill">Open to full-time roles</span><span class="skill-pill">Open to relocation across the U.S.</span></div><div class="contact-links"><a class="contact-link" href="mailto:subedi.38@wright.edu?subject=Industrial%20Engineering%20Opportunity%20for%20Sandesh%20Subedi"><span>subedi.38@wright.edu</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6h16v12H4zM4 7l8 6 8-6"/></svg></a><a class="contact-link secondary" href="https://wright.joinhandshake.com/profiles/sandeshxd" target="_blank" rel="noopener noreferrer"><span>Handshake Profile</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M7 17 17 7M9 7h8v8M17 13v6H5V7h6"/></svg></a></div></div><a class="backtop" href="#top">Back to top <span aria-hidden="true">↑</span></a></div><footer class="footer"><span>© Sandesh Subedi · Industrial engineering portfolio</span><span>Manufacturing systems · Capacity analysis · Decision support</span></footer></div></section>
+  </main>
+  <div class="mobile-dock" aria-label="Quick contact links"><a href="mailto:subedi.38@wright.edu?subject=Industrial%20Engineering%20Opportunity%20for%20Sandesh%20Subedi"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16v12H4zM4 7l8 6 8-6"/></svg>Email</a><a href="https://wright.joinhandshake.com/profiles/sandeshxd" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M7 17 17 7M9 7h8v8M17 13v6H5V7h6"/></svg>Handshake Profile</a></div>
+  <script>
+    (() => {
+      'use strict';
+      const $ = (s) => document.querySelector(s);
+      const $$ = (s) => [...document.querySelectorAll(s)];
+      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const navToggle = $('#navToggle');
+      const nav = $('#primaryNav');
+      navToggle.addEventListener('click', () => {const expanded=navToggle.getAttribute('aria-expanded')==='true';navToggle.setAttribute('aria-expanded',String(!expanded));navToggle.setAttribute('aria-label',expanded?'Open navigation':'Close navigation');nav.classList.toggle('open',!expanded)});
+      $$('#primaryNav a').forEach(link => link.addEventListener('click', () => {nav.classList.remove('open');navToggle.setAttribute('aria-expanded','false');navToggle.setAttribute('aria-label','Open navigation')}));
+      const sections = $$('main section[id]');
+      let ticking=false;
+      const updateScroll=()=>{const max=document.documentElement.scrollHeight-innerHeight;$('#scrollProgress').style.width=`${Math.max(0,Math.min(100,max>0?scrollY/max*100:0))}%`;let current='';sections.forEach(s=>{if(s.getBoundingClientRect().top<=innerHeight*.35)current=s.id});$$('.nav a').forEach(a=>{if(a.getAttribute('href')==='#'+current)a.setAttribute('aria-current','true');else a.removeAttribute('aria-current')});ticking=false};
+      addEventListener('scroll',()=>{if(!ticking){requestAnimationFrame(updateScroll);ticking=true}},{passive:true});updateScroll();
+      if('IntersectionObserver' in window && !reduceMotion){const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');e.target.classList.add('in-view');obs.unobserve(e.target)}})},{threshold:.08,rootMargin:'0px 0px -25px 0px'});$$('.reveal,.hero').forEach(el=>obs.observe(el))}else{$$('.reveal').forEach(el=>el.classList.add('visible'));$('.hero').classList.add('in-view')}
+      const steps=[
+        {tag:'PROCESS CONTEXT',title:'Housing preparation',copy:'Bearings and other components were installed into incoming housings before movement in totes. The work needed to be traced as part of the actual routing, not assumed to run as a fixed staffed station.'},
+        {tag:'PROCESS CONTEXT',title:'Motor and gear',copy:'The mechanical section combined prepared housings with motors and geartrains. Its workload contributed to upstream flow and variant-dependent resource requirements.'},
+        {tag:'VARIANT COMPLEXITY',title:'Electrical assembly',copy:'Wiring, connectors and sensor work changed by actuator variant. Qualified labor, task eligibility and work transfer could not be assumed from average cycle time alone.'},
+        {tag:'STRUCTURAL CONSTRAINT',title:'Final mechanical',copy:'Final fastening and torque verification created a separate upstream labor-capacity concern. Moving work off this station required verified support time, qualification and a feasible schedule.'},
+        {tag:'SYSTEM CONSTRAINT',title:'Functional test',copy:'Test programming was only part of the actual fixture workload. Loading, connection, unloading, repeats, diagnostics and intercycle activity demanded separate evidence and resource accounting.'},
+        {tag:'INDEPENDENT GATE',title:'Inspection and packaging',copy:'A test pass was not yet finished-goods acceptance. Inspection, labels, Quality disposition and ERP posting were separate controlled stages and separate populations.'}
+      ];
+      const stepButtons=$$('.flow-step');function setStep(n){stepButtons.forEach((b,i)=>b.setAttribute('aria-pressed',String(i===n)));$('#stageTag').textContent=steps[n].tag;$('#stageTitle').textContent=steps[n].title;$('#stageCopy').textContent=steps[n].copy}
+      stepButtons.forEach((b,i)=>b.addEventListener('click',()=>setStep(i)));
+      const model={legacy:{seconds:54,min:405.0,caption:'Legacy programmed-test assumption only. It omitted key components of physical occupation, so its apparent fit inside the shift was not a defensible capacity result.',label:'Illustrative legacy program-time demand',note:'<strong>False sense of headroom:</strong> 405.0 program-minutes appear to fit within 510 elapsed minutes, but this simplified assumption does not capture full fixture occupation, repeats, manual activity or intercycle effects.'},reconstructed:{seconds:73.21,min:549.075,caption:'Conditional weighted fixture occupation per unique tested serial. Includes more than program execution and is not a certified forward Quality-acceptance rate.',label:'Required fixture occupation',note:'<strong>Necessary-condition shortfall:</strong> 549.1 required fixture-minutes exceed the entire 510-minute elapsed shift by 39.1 minutes, even before allowance for gaps or other resources. A complete 450-unit accepted-output configuration was not demonstrated.'}};
+      function setModel(key){const m=model[key];$('#legacyBtn').setAttribute('aria-pressed',String(key==='legacy'));$('#reconstructedBtn').setAttribute('aria-pressed',String(key==='reconstructed'));$('#eqDisplay').innerHTML=`450 <span class="times">×</span> ${m.seconds.toFixed(key==='legacy'?0:2)} s <span class="times">÷</span> 60 <span class="times">=</span> <strong>${m.min.toFixed(1)} min</strong>`;$('#eqCaption').textContent=m.caption;$('#barLabel').textContent=m.label;$('#barNumber').textContent=m.min.toFixed(1)+' min';$('#capacityFill').style.width=(m.min/600*100)+'%';$('#capChart').setAttribute('aria-label',`${m.min.toFixed(1)} modeled minutes ${m.min>510?'exceed':'are below'} the 510 minute full shift reference`);$('#capacityConclusion').innerHTML=m.note}
+      $('#legacyBtn').addEventListener('click',()=>setModel('legacy'));$('#reconstructedBtn').addEventListener('click',()=>setModel('reconstructed'));
+      const decisions={d1:{code:'D1',status:'Evidence path blocked',title:'Second test-fixture pathway',summary:'Adding a fixture could relieve aggregate occupation demand, but the equipment-specific architecture, qualification, routing and supporting resources were not verified.',test:'Conditional single-versus-multiple-fixture capacity bounds and configuration dependencies.',stop:'Generic candidate information could not qualify a production-ready second fixture or prove a complete operating configuration.'},d2:{code:'D2',status:'On hold',title:'Reduce fixture occupation',summary:'Reducing the time each unit occupies the fixture could address test demand without additional equipment, but no mechanism demonstrated a verified reduction.',test:'Candidate mechanisms, sequence boundaries and their possible effect on actual occupied minutes.',stop:'Zero achieved time reduction could be credited without a validated mechanism and approved testing.'},d3:{code:'D3',status:'Documentary work stopped',title:'Qualified staffing and support',summary:'Concurrent machine time does not create qualified operators. Shared support tasks, original duties and nondeferrable overlaps constrained theoretical staffing transfers.',test:'Qualification boundaries, manual service conflicts and protected operator availability.',stop:'No executable, approved qualified-labor arrangement covered the required work without conflicts.'},option:{code:'C',status:'Strategic watch',title:'Defined manufacturing-system option',summary:'Management retained a broader manufacturing-system strategy as a future pathway, not as a funded implementation or proven 450-unit solution.',test:'A management decision framework for future supplier evidence, integrated alternatives and credible changes in demand.',stop:'No new technical work, supplier engagement, capital, trials or staffing changes were authorized. Reopening requires a new decision.'}};
+      const tabs=$$('.tab');function setDecision(key,focus=false){const d=decisions[key];tabs.forEach(b=>{let current=b.dataset.decision===key;b.setAttribute('aria-selected',String(current));b.tabIndex=current?0:-1;if(current&&focus)b.focus()});$('#decisionPanel').setAttribute('aria-labelledby','tab-'+(key==='option'?'option':key));$('#decisionCode').textContent=d.code;$('#decisionStatus').textContent=d.status;$('#decisionTitle').textContent=d.title;$('#decisionSummary').textContent=d.summary;$('#decisionTest').textContent=d.test;$('#decisionStop').textContent=d.stop}
+      tabs.forEach((b,i)=>{b.addEventListener('click',()=>setDecision(b.dataset.decision));b.addEventListener('keydown',e=>{if(['ArrowRight','ArrowLeft','Home','End'].includes(e.key)){e.preventDefault();let j=e.key==='Home'?0:e.key==='End'?tabs.length-1:(i+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;setDecision(tabs[j].dataset.decision,true)}})});
+      const values=[0,20,40,70];const input=$('#scenarioInput');const nf=new Intl.NumberFormat('en-US');function updateScenario(){const units=values[Number(input.value)];$('#scenarioUnits').textContent=nf.format(units);$('#scenarioValue').innerHTML=`$${nf.format(units*240*50)} <small>/ yr</small>`;input.style.background=`linear-gradient(90deg,#171915 ${Number(input.value)/3*100}%,#cad3bf ${Number(input.value)/3*100}%)`};input.addEventListener('input',updateScenario);updateScenario();
+    })();
+  </script>
+</body>
+</html>
